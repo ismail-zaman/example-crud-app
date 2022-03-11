@@ -1,10 +1,19 @@
 {
+    "name": "default",
+
     "type": "postgres",
-    "host": "localhost",
+    "host": "ec2-54-158-26-89.compute-1.amazonaws.com",
     "port": 5432,
-    "username": "postgres",
-    "password": "admin",
-    "database": "productsDb",
+    "username": "laqanhiwuyqqjs",
+    "password": "727a34e0f763221d0a1b5ed2f2d5ba564aa448491822901b6e15d6381aa91c76",
+    "database": "d1eph7nj1qgifn",
     "entities": ["dist/**/*.entity{.ts,.js}"],
-    "synchronize": true
+    "synchronize": true,
+    "logging": true,
+    "ssl":true,
+    "extra": {
+      "ssl": {
+        "rejectUnauthorized": false
+      }
+    }
   }
