@@ -1,8 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, Repository, TreeRepository, UpdateResult } from "typeorm";
 import { Product } from "./product.entity";
 import { ProductDto } from "./product.dto";
+import { ObjectNotFoundException } from "src/exceptions/object-not-found-exception";
+import { ObjectNotCreatedException } from "src/exceptions/object-not-created";
 
 //exception handling
 //Raw empty ?
@@ -26,7 +28,15 @@ export class ProductService{
     // create, save
     async createProduct(productData: ProductDto): Promise<ProductDto & Product | any>{
         try{
-            return this.productRepository.save(productData)
+            const newProduct = await this.productRepository.save(productData)
+            console.log(newProduct)
+            if(!newProduct){
+                console.log('Hello Babes')
+                throw new ObjectNotCreatedException("Product")
+            }
+
+            return newProduct
+            
         }catch(e){
             return e
         }
@@ -51,23 +61,21 @@ export class ProductService{
         
     }
 
-    // async updateById(id: number, productData: ProductDto){
-    //     try{
-    //         const item = await this.productRepository.findOne({
-    //             where: { id }
-    //         })
-
-    //         return this.productRepository.save({
-    //             ...item,
-    //             ...productData
-    //         });
-
-    //     }catch(e){
-    //         return e
-    //     }
-
-
-    // }
+    async getProductById(id:number): Promise<Product>{
+        try{
+            
+            const product = await this.productRepository.findOne({
+                where:{id}
+            })
+            
+            if(!product){
+                throw new ObjectNotFoundException("Product", id);
+            }
+            return product
+        }catch(e){
+            return e
+        }
+    }
 
 
 
