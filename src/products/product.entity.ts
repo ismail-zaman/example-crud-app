@@ -7,11 +7,11 @@ export class Product{
     id: Number;
 
     @Column()
-    name: String;
+    name: string;
     
 
     @Column()
-    category: String;
+    category: string;
     nullable: false;
 
     @Column()

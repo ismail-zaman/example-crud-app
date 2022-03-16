@@ -4,6 +4,7 @@ import { ProductDto } from "./product.dto";
 import { Product } from "./product.entity";
 import { DeleteResult, UpdateResult } from "typeorm";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
+import { GlobalExceptionFilter } from "src/exceptions/typeorm/global-exceptions-filter";
 
 
 
@@ -34,10 +35,26 @@ export class ProductsController{
     }
 
 
+
     @Post()
+    @UseFilters(new GlobalExceptionFilter())
     @ApiResponse({type: ProductDto})
     async Create(@Body() product: ProductDto): Promise<ProductDto & Product>{
-            return this.ProductService.createProduct(product) 
+            return this.ProductService.createProduct(product)
+
+
+
+        //     .then((result)=>{
+        //             if(result["driverError"]){
+        //                     throw new HttpException('Unable to create product', HttpStatus.NOT_ACCEPTABLE)
+        //             }
+        //             else{
+        //                     return result
+        //             }
+        //     })
+        //     .catch((e)=>{
+        //             throw new HttpException('Unable to create product', HttpStatus.NOT_ACCEPTABLE)
+        //     });
     }
 
 
@@ -48,6 +65,16 @@ export class ProductsController{
         @Param('id') id:number
     ):Promise<DeleteResult>{
             return this.ProductService.deleteProduct(id)
+            .then((result)=>{
+                if(result.affected < 1){
+                        throw new HttpException('Product Not Found',HttpStatus.NOT_FOUND)
+                }else{
+                        return result
+                }
+            })
+            .catch((e)=>{
+                throw new HttpException('Product Not Found',HttpStatus.NOT_FOUND)
+            });
     }
 
     @Put(':id')
@@ -59,6 +86,12 @@ export class ProductsController{
         @Param('id') id:number,
         @Body() product: ProductDto
     ):Promise<UpdateResult>{
-            return this.ProductService.updateProduct(id,product)
+            const updateResult = await this.ProductService.updateProduct(id,product)
+            if(updateResult.affected < 1){
+                throw new HttpException('Product Not Found',HttpStatus.NOT_FOUND)
+            }
+            else{
+                    return updateResult
+            }
     }
 }

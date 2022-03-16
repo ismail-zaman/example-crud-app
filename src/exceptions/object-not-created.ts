@@ -6,7 +6,7 @@ export class ObjectNotCreatedException extends BaseException {
     super(HttpStatus.NOT_ACCEPTABLE, {
       message: `${name} Not Created`,
       name: `${name.toLocaleUpperCase()}_NOT_CREATED`,
-      developerMessage: `${name} not found by ID [${id}]`,
+      
     });
   }
 }

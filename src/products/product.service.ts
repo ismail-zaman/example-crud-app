@@ -22,34 +22,16 @@ export class ProductService{
         }catch(e){
             return e
         }
-        
     }
 
     // create, save
     async createProduct(productData: ProductDto): Promise<ProductDto & Product | any>{
-        try{
-            const newProduct = await this.productRepository.save(productData)
-            console.log(newProduct)
-            if(!newProduct){
-                console.log('Hello Babes')
-                throw new ObjectNotCreatedException("Product")
-            }
-
-            return newProduct
-            
-        }catch(e){
-            return e
-        }
+            return await this.productRepository.save(productData)
             
     }
 
     async deleteProduct(id: number): Promise<DeleteResult>  {
-        try{
             return this.productRepository.delete(id)
-        }catch(e){
-            return e
-        }
-        
     }
 
     async updateProduct(id:number, productData: ProductDto): Promise<UpdateResult>{
