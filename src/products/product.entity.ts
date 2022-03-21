@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, DataTypeNotSupportedError } from 'typeorm';
 
 
 @Entity()
@@ -10,9 +10,9 @@ export class Product{
     name: string;
     
 
-    @Column()
-    category: string;
-    nullable: false;
+    @Column({type: 'varchar',length: 120})
+    public category: string;
+    //nullable: faxlse;
 
     @Column()
     price: Number;

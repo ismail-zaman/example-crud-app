@@ -2,11 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule,DocumentBuilder } from '@nestjs/swagger';
 import { ConfigModule } from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
 import {GlobalExceptionFilter} from './exceptions/typeorm/global-exceptions-filter'
+
 ConfigModule.forRoot();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalFilters(new GlobalExceptionFilter())
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  //app.useGlobalFilters(new GlobalExceptionFilter())
 
   const config = new DocumentBuilder()
     .setTitle('Products CRUD')

@@ -35,46 +35,23 @@ export class ProductsController{
     }
 
 
-
+    //@UseFilters(new GlobalExceptionFilter())
     @Post()
-    @UseFilters(new GlobalExceptionFilter())
     @ApiResponse({type: ProductDto})
-    async Create(@Body() product: ProductDto): Promise<ProductDto & Product>{
-            return this.ProductService.createProduct(product)
-
-
-
-        //     .then((result)=>{
-        //             if(result["driverError"]){
-        //                     throw new HttpException('Unable to create product', HttpStatus.NOT_ACCEPTABLE)
-        //             }
-        //             else{
-        //                     return result
-        //             }
-        //     })
-        //     .catch((e)=>{
-        //             throw new HttpException('Unable to create product', HttpStatus.NOT_ACCEPTABLE)
-        //     });
+    public async Create(@Body() body: ProductDto): Promise<ProductDto & Product>{
+            return this.ProductService.createProduct(body)
     }
 
 
 
     @Delete(':id')
+    @UseFilters(new GlobalExceptionFilter())
     @ApiParam({ name: "id", required: true, description: 'The integer ID associated with a created product'})
     async Delete(
         @Param('id') id:number
     ):Promise<DeleteResult>{
             return this.ProductService.deleteProduct(id)
-            .then((result)=>{
-                if(result.affected < 1){
-                        throw new HttpException('Product Not Found',HttpStatus.NOT_FOUND)
-                }else{
-                        return result
-                }
-            })
-            .catch((e)=>{
-                throw new HttpException('Product Not Found',HttpStatus.NOT_FOUND)
-            });
+       
     }
 
     @Put(':id')
